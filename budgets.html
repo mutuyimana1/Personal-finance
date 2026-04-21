@@ -59,26 +59,119 @@
         </div>
       </aside>
 
-      <main class="flex-1 overflow-y-auto p-8">
+      <main class="flex-1 overflow-y-auto p-8 relative">
          <div class="flex items-center justify-between mb-8">
           <h1 id="pageTitle" class="text-3xl font-bold text-[#1f2230]">
             Budgets
           </h1>
           <button
-            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold"
+            id="openBudgetModalBtn"
+            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold text-sm hover:bg-gray-800 transition"
           >
-            <i data-lucide="plus"></i> Add new budget
+            +Add New Budget
           </button>
         </div>
-        <section id="transfer" class="page">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
-          Budgets
+        
+        <section id="budgets" class="page flex flex-col lg:flex-row gap-6">
+          <!-- Left Column: Spending Summary -->
+          <div class="w-full lg:w-1/3 flex flex-col gap-6">
+            <div class="bg-white rounded-xl p-8 shadow-sm">
+              <h2 class="text-xl font-bold mb-6 text-[#1f2230]">Spending Summary</h2>
+              <div class="flex justify-center mb-8 relative">
+                <!-- Pie Chart Container -->
+                <div id="pieChart" class="w-64 h-64 rounded-full flex items-center justify-center relative transition-all duration-500" style="background: conic-gradient(#f3f4f6 0deg, #f3f4f6 360deg);">
+                  <!-- Inner cut out -->
+                  <div class="w-48 h-48 bg-white rounded-full flex flex-col items-center justify-center absolute z-10 shadow-inner">
+                    <span id="pieTotalSpent" class="text-3xl font-bold text-[#1f2230]">$0.00</span>
+                    <span id="pieTotalLimit" class="text-sm text-gray-400 mt-1">of $0.00 limit</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Legend list generated dynamically -->
+              <div id="pieLegend" class="space-y-4"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Budget List -->
+          <div class="w-full lg:w-2/3 flex flex-col gap-6" id="budgetCardsContainer">
+             <!-- Budget Cards generated dynamically -->
           </div>
         </section>
       </main>
+
+      <!-- Modal Overlay -->
+      <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <!-- Modal Content -->
+        <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
+          <button id="closeBudgetModalBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          
+          <h2 class="text-2xl font-bold text-[#1f2230] mb-2">Add New Budget</h2>
+          <p class="text-sm text-gray-500 mb-6">Choose a category to set a spending budget. These categories can help you monitor spending.</p>
+          
+          <form id="budgetForm" class="space-y-5">
+            <div>
+              <label class="block text-sm font-semibold text-gray-600 mb-2">Category</label>
+              <div class="relative">
+                <select id="bCategory" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800 appearance-none bg-white text-gray-700">
+                  <option value="" disabled selected>Select a category</option>
+                  <option value="entertainment">Entertainment</option>
+                  <option value="education">Education</option>
+                  <option value="transportation">Transportation</option>
+                  <option value="food">Food</option>
+                  <option value="utilities">Utilities</option>
+                  <option value="shopping">Shopping</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-600 mb-2">Maximum Spend</label>
+              <input
+                type="number"
+                id="bSpend"
+                step="0.01"
+                required
+                placeholder="e.g. $2000"
+                class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-600 mb-2">Theme</label>
+              <div class="relative">
+                <select id="bTheme" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800 appearance-none bg-white text-gray-700">
+                  <option value="" disabled selected>Select a theme</option>
+                  <option value="#22c55e" data-color="Green" class="text-[#22c55e]">Green</option>
+                  <option value="#eab308" data-color="Yellow" class="text-[#eab308]">Yellow</option>
+                  <option value="#06b6d4" data-color="Cyan" class="text-[#06b6d4]">Cyan</option>
+                  <option value="#3b82f6" data-color="Blue" class="text-[#3b82f6]">Blue</option>
+                  <option value="#8b5cf6" data-color="Purple" class="text-[#8b5cf6]">Purple</option>
+                  <option value="#ec4899" data-color="Pink" class="text-[#ec4899]">Pink</option>
+                  <option value="#f97316" data-color="Orange" class="text-[#f97316]">Orange</option>
+                  <option value="#64748b" data-color="Grey" class="text-[#64748b]">Grey</option>
+                  <option value="#525252" data-color="Dark Grey" class="text-[#525252]">Dark Grey</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full bg-[#1f2230] text-white py-4 rounded-xl font-bold mt-2 hover:bg-gray-800 transition">
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
     <script>
       lucide.createIcons();
     </script>
+    <script src="budgets.js"></script>
   </body>
 </html>

@@ -9,22 +9,22 @@ class AuthUtils {
         return Date.now().toString(36) + Math.random().toString(36).substr(2);
     }
     static hashPassword(password) {
-        // Simple hash for demo purposes - in production, use proper hashing
+        // Simple hash for demo purposes 
         return btoa(password);
     }
     static validatePassword(password) {
         if (password.length < 8) {
             return { isValid: false, message: 'Password must be at least 8 characters long' };
         }
-        if (!/(?=.*[a-z])/.test(password)) {
-            return { isValid: false, message: 'Password must contain at least one lowercase letter' };
-        }
-        if (!/(?=.*[A-Z])/.test(password)) {
-            return { isValid: false, message: 'Password must contain at least one uppercase letter' };
-        }
-        if (!/(?=.*\d)/.test(password)) {
-            return { isValid: false, message: 'Password must contain at least one number' };
-        }
+        // if (!/(?=.*[a-z])/.test(password)) {
+        //     return { isValid: false, message: 'Password must contain at least one lowercase letter' };
+        // }
+        // if (!/(?=.*[A-Z])/.test(password)) {
+        //     return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+        // }
+        // if (!/(?=.*\d)/.test(password)) {
+        //     return { isValid: false, message: 'Password must contain at least one number' };
+        // }
         return { isValid: true, message: 'Password is valid' };
     }
     static validateEmail(email) {
