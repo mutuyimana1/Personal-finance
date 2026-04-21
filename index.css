@@ -1,0 +1,257 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@import "tailwindcss";
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ece9e7;
+  min-height: 100vh;
+  display: flex;
+  padding: 20px;
+  color: #1f2230;
+}
+.wrapper {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 90px;
+  /* align-items: center; */
+}
+.leftSide{
+background-image: url("./assets/loginImage.png");
+border-radius: 10px;
+position: relative;
+width: 40%;
+}
+.logo {
+  font-size: 52px;
+  font-weight: 800;
+  color: #ffff;
+  padding: 40px 20px;
+}
+.illustration {
+  position: absolute;
+  inset: 90px 0 180px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 180px;
+  opacity: 0.9;
+}
+.hero-content {
+  position: absolute;
+  z-index: 2;
+  color: #fff;
+  bottom: 50px;
+  padding: 20px;
+}
+.hero-content h1{
+    font-size: 32px;
+    line-height: 1.08;
+    font-weight: 800;
+    margin-bottom: 28px;
+}
+.hero h1 {
+  font-size: 58px;
+  line-height: 1.08;
+  font-weight: 800;
+  margin-bottom: 28px;
+  padding:10px ;
+}
+.hero p {
+  font-size: 24px;
+  line-height: 1.5;
+  color: #e5e5e5;
+}
+.cardContainer{
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+}
+.card {
+  background: #f7f7f7;
+  border-radius: 18px;
+  padding: 46px 44px;
+  max-width: 620px;
+  margin-top: 20%;
+  margin-left: 20%;
+}
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 36px;
+}
+.form-group {
+  margin-bottom: 28px;
+}
+label {
+  display: block;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 12px;
+}
+input {
+  width: 100%;
+  height: 62px;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  padding: 0 18px;
+  font-size: 14px;
+  background: #eef4ff;
+}
+.password-wrap {
+  position: relative;
+}
+.eye {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.hint {
+  text-align: right;
+  color: #6f7c91;
+  font-size: 14px;
+  margin-top: 10px;
+}
+button {
+  width: 100%;
+  height: 68px;
+  border: none;
+  border-radius: 10px;
+  background: #171822;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 18px;
+}
+.bottom-text {
+  text-align: center;
+  margin-top: 34px;
+  font-size: 14px;
+  color: #666;
+}
+.bottom-text a {
+  color: #171822;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Error and Success Messages */
+.error-message {
+  display: block;
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.success-message {
+  display: block;
+  color: #28a745;
+  font-size: 14px;
+  margin-top: 12px;
+  text-align: center;
+  font-weight: 500;
+  padding: 8px;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+}
+
+input.error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+input.success {
+  border-color: #28a745;
+  background-color: #f8fff8;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.spinner-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 5px solid #ffffff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-text {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 1100px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .hero {
+    min-height: 500px;
+  }
+  .card {
+    max-width: 100%;
+  }
+}

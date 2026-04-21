@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body class="bg-[#ece9e7] font-sans overflow-hidden">
+    <div class="flex h-screen">
+      <aside
+        id="sidebar"
+        class="w-20 bg-[#171822] text-white flex flex-col justify-between py-6 transition-all duration-300"
+      >
+        <div>
+          <div class="flex justify-center mb-10 text-4xl font-bold">f</div>
+          <nav class="space-y-6 px-5">
+            <button
+              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              data-page="overview"
+            >
+             <a href="/index.html"><i data-lucide="home"></i></a>
+            </button>
+            <button
+              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              data-page="transfer"
+            >
+              <a href="/transactions.html"
+                ><i data-lucide="arrow-up-down"></i
+              ></a>
+            </button>
+            <button
+              class="nav-btn w-full flex justify-center text-teal-400"
+              data-page="analytics"
+            >
+             <a href="/budgets.html"> <i data-lucide="pie-chart"></i> </a>
+            </button>
+            <button
+              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              data-page="pots"
+            >
+              <a href="/pots.html">  <i data-lucide="wallet"></i> </a>
+            </button>
+            <button
+              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              data-page="transactions"
+            >
+               <a href="/recurring-bills.html">  <i data-lucide="receipt"></i> </a>
+            </button>
+          </nav>
+        </div>
+        <div class="px-5">
+          <button
+            class="w-full flex justify-center text-gray-400 hover:text-white"
+          >
+            <i data-lucide="log-out"></i>
+          </button>
+        </div>
+      </aside>
+
+      <main class="flex-1 overflow-y-auto p-8">
+         <div class="flex items-center justify-between mb-8">
+          <h1 id="pageTitle" class="text-3xl font-bold text-[#1f2230]">
+            Budgets
+          </h1>
+          <button
+            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold"
+          >
+            <i data-lucide="plus"></i> Add new budget
+          </button>
+        </div>
+        <section id="transfer" class="page">
+          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
+          Budgets
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
