@@ -76,19 +76,19 @@
           <!-- Left Column: Spending Summary -->
           <div class="w-full lg:w-1/3 flex flex-col gap-6">
             <div class="bg-white rounded-xl p-8 shadow-sm">
-              <h2 class="text-xl font-bold mb-6 text-[#1f2230]">Spending Summary</h2>
-              <div class="flex justify-center mb-8 relative">
+              <div class="flex justify-center mb-10 relative">
                 <!-- Pie Chart Container -->
                 <div id="pieChart" class="w-64 h-64 rounded-full flex items-center justify-center relative transition-all duration-500" style="background: conic-gradient(#f3f4f6 0deg, #f3f4f6 360deg);">
                   <!-- Inner cut out -->
-                  <div class="w-48 h-48 bg-white rounded-full flex flex-col items-center justify-center absolute z-10 shadow-inner">
+                  <div class="w-44 h-44 bg-white rounded-full flex flex-col items-center justify-center absolute z-10 shadow-inner">
                     <span id="pieTotalSpent" class="text-3xl font-bold text-[#1f2230]">$0.00</span>
                     <span id="pieTotalLimit" class="text-sm text-gray-400 mt-1">of $0.00 limit</span>
                   </div>
                 </div>
               </div>
+              <h2 class="text-lg font-bold mb-6 text-[#1f2230]">Spending Summary</h2>
               <!-- Legend list generated dynamically -->
-              <div id="pieLegend" class="space-y-4"></div>
+              <div id="pieLegend" class="flex flex-col"></div>
             </div>
           </div>
 
@@ -96,12 +96,12 @@
           <div class="w-full lg:w-2/3 flex flex-col gap-6" id="budgetCardsContainer">
              <!-- Budget Cards generated dynamically -->
           </div>
+          </div>
         </section>
-      </main>
-
-      <!-- Modal Overlay -->
-      <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <!-- Modal Content -->
+        
+        <!-- Modal Overlay -->
+        <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center">
+          <!-- Modal Content -->
         <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
           <button id="closeBudgetModalBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600">
             <i data-lucide="x" class="w-5 h-5"></i>
@@ -167,11 +167,14 @@
             </button>
           </form>
         </div>
-      </div>
+      </main>
     </div>
     <script>
       lucide.createIcons();
     </script>
-    <script src="budgets.js"></script>
+    <script src="/router.js"></script>
+    <script src="/index.js"></script>
+    <script src="/transactions.js"></script>
+    <script src="/budgets.js"></script>
   </body>
 </html>

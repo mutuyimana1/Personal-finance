@@ -8,11 +8,20 @@ interface Transaction {
   recurring: boolean;
 }
 
-// Initial Data
-let transactions: Transaction[] = [
-  { id: '1', name: 'School Fees', category: 'education', date: '2026-04-22', amount: 100000.00, recurring: false },
-  { id: '2', name: 'Transport', category: 'transportation', date: '2026-04-21', amount: 5000.00, recurring: true }
-];
+// Initial Data - Load from local storage
+let transactions: Transaction[] = [];
+
+// Functions to handle local storage
+function loadTransactions() {
+  const stored = localStorage.getItem('transactions');
+  if (stored) {
+    transactions = JSON.parse(stored);
+  }
+}
+
+function saveTransactions() {
+  localStorage.setItem('transactions', JSON.stringify(transactions));
+}
 
 // State
 let currentPage = 1;
@@ -22,7 +31,8 @@ let currentFilter = 'all';
 let currentSearch = '';
 
 // DOM Elements
-document.addEventListener('DOMContentLoaded', () => {
+// Function to initialize transactions logic
+window.initTransactions = function() {
   const transactionsList = document.getElementById('transactionsList') as HTMLElement;
   const searchInput = document.getElementById('searchInput') as HTMLInputElement;
   const sortSelect = document.getElementById('sortSelect') as HTMLSelectElement;
@@ -39,7 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const tName = document.getElementById('tName') as HTMLInputElement;
   const charCount = document.getElementById('charCount') as HTMLElement;
 
+  if (!transactionsList || !searchInput || !sortSelect || !categorySelect || !paginationNumbers || !prevPageBtn || !nextPageBtn || !modal || !openModalBtn || !closeModalBtn || !transactionForm || !tName || !charCount) {
+      console.warn('Some transaction DOM elements not found. Initialization skipped.');
+      return;
+  }
+
+  // Remove existing listeners if necessary (we can rely on garbage collection for detached DOM elements)
+  
   // Initialize
+  loadTransactions();
   renderTransactions();
 
   // Event Listeners for Filters/Search
@@ -80,10 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Modal Event Listeners
   openModalBtn.addEventListener('click', () => {
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
   });
 
   closeModalBtn.addEventListener('click', () => {
     modal.classList.add('hidden');
+    modal.classList.remove('flex');
     transactionForm.reset();
     charCount.textContent = '30';
   });
@@ -95,12 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Form Submission
-  transactionForm.addEventListener('submit', (e) => {
+  // Remove previously added listeners to prevent duplicate submissions if init is called multiple times
+  const newForm = transactionForm.cloneNode(true);
+  transactionForm.parentNode?.replaceChild(newForm, transactionForm);
+  const activeTransactionForm = document.getElementById('transactionForm') as HTMLFormElement;
+
+  activeTransactionForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
     const newTransaction: Transaction = {
       id: Date.now().toString(),
-      name: tName.value,
+      name: (document.getElementById('tName') as HTMLInputElement).value,
       date: (document.getElementById('tDate') as HTMLInputElement).value,
       category: (document.getElementById('tCategory') as HTMLSelectElement).value,
       amount: parseFloat((document.getElementById('tAmount') as HTMLInputElement).value),
@@ -109,18 +134,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     transactions.unshift(newTransaction);
     modal.classList.add('hidden');
-    transactionForm.reset();
-    charCount.textContent = '30';
+    modal.classList.remove('flex');
+    activeTransactionForm.reset();
+    (document.getElementById('charCount') as HTMLElement).textContent = '30';
     
     // reset filters
     currentSearch = '';
     currentFilter = 'all';
     currentSort = 'latest';
-    searchInput.value = '';
-    categorySelect.value = 'all';
-    sortSelect.value = 'latest';
+    (document.getElementById('searchInput') as HTMLInputElement).value = '';
+    (document.getElementById('categorySelect') as HTMLSelectElement).value = 'all';
+    (document.getElementById('sortSelect') as HTMLSelectElement).value = 'latest';
     currentPage = 1;
 
+    saveTransactions();
     renderTransactions();
   });
 
@@ -160,9 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const paginated = list.slice(start, start + itemsPerPage);
 
     // Update table body
-    transactionsList.innerHTML = '';
+    const tList = document.getElementById('transactionsList');
+    if (!tList) return;
+    
+    tList.innerHTML = '';
     if (paginated.length === 0) {
-      transactionsList.innerHTML = '<div class="text-center text-gray-400 py-10">No transactions found.</div>';
+      tList.innerHTML = '<div class="text-center text-gray-400 py-10">No transactions found.</div>';
     } else {
       paginated.forEach(t => {
         const amountDisplay = (t.amount >= 0 ? '+$' : '-$') + Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -179,29 +209,41 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="text-right ${formatAmountClass}">${amountDisplay}</div>
           </div>
         `;
-        transactionsList.innerHTML += rowHTML;
+        tList.innerHTML += rowHTML;
       });
     }
 
     // Since we appended raw HTML with lucide icons, we need to call lucide again
     // @ts-ignore
-    if (window.lucide) { window.lucide.createIcons(); }
+    if (window.lucide && typeof window.lucide.createIcons === 'function') { window.lucide.createIcons(); }
 
     // Update Pagination Buttons
-    prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+    const prevBtn = document.getElementById('prevPageBtn') as HTMLButtonElement;
+    const nextBtn = document.getElementById('nextPageBtn') as HTMLButtonElement;
+    if (prevBtn) prevBtn.disabled = currentPage === 1;
+    if (nextBtn) nextBtn.disabled = currentPage === totalPages || totalPages === 0;
 
     // Update Pagination Numbers
-    paginationNumbers.innerHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i.toString();
-      btn.className = `w-8 h-8 rounded-lg flex items-center justify-center text-sm ${i === currentPage ? 'bg-[#1f2230] text-white' : 'text-gray-600 hover:bg-gray-100'}`;
-      btn.addEventListener('click', () => {
-        currentPage = i;
-        renderTransactions();
-      });
-      paginationNumbers.appendChild(btn);
+    const pNumbers = document.getElementById('paginationNumbers');
+    if (pNumbers) {
+        pNumbers.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i.toString();
+          btn.className = `w-8 h-8 rounded-lg flex items-center justify-center text-sm ${i === currentPage ? 'bg-[#1f2230] text-white' : 'text-gray-600 hover:bg-gray-100'}`;
+          btn.addEventListener('click', () => {
+            currentPage = i;
+            renderTransactions();
+          });
+          pNumbers.appendChild(btn);
+        }
     }
   }
+};
+
+// Fallback for direct page load (if router is not handling it)
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initTransactions === 'function' && document.getElementById('transactionsList')) {
+        window.initTransactions();
+    }
 });

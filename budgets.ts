@@ -53,7 +53,8 @@ function getIconForCategory(category: string): string {
 }
 
 // DOM Setup
-document.addEventListener('DOMContentLoaded', () => {
+// Function to initialize budgets logic
+window.initBudgets = function() {
   // Budget Summary Elements
   const pieChart = document.getElementById('pieChart') as HTMLElement;
   const pieTotalSpent = document.getElementById('pieTotalSpent') as HTMLElement;
@@ -68,6 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const openBudgetModalBtn = document.getElementById('openBudgetModalBtn') as HTMLButtonElement;
   const closeBudgetModalBtn = document.getElementById('closeBudgetModalBtn') as HTMLButtonElement;
   const budgetForm = document.getElementById('budgetForm') as HTMLFormElement;
+
+  if (!pieChart || !pieTotalSpent || !pieTotalLimit || !pieLegend || !budgetCardsContainer || !budgetModal || !openBudgetModalBtn || !closeBudgetModalBtn || !budgetForm) {
+      console.warn('Some budget DOM elements not found. Initialization skipped.');
+      return;
+  }
 
   function renderBudgets() {
     let totalLimit = 0;
@@ -110,14 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
         transactionsHtml = `<div class="text-gray-400 text-sm mt-4 text-center">No spending in this category yet.</div>`;
       } else {
         latestTransactions.forEach(t => {
+          const amountDisplay = (t.amount >= 0 ? '+$' : '-$') + Math.abs(t.amount).toLocaleString(undefined, {minimumFractionDigits: 2});
+          const formatAmountClass = t.amount >= 0 ? "text-teal-600" : "text-[#1f2230]";
           transactionsHtml += `
-            <div class="flex items-center justify-between border-t py-3 mt-1">
+            <div class="flex items-center justify-between border-t border-gray-100 py-3 mt-1">
               <div class="flex items-center gap-3">
                 ${getIconForCategory(t.category)}
                 <span class="font-bold text-[#1f2230] text-sm">${t.name}</span>
               </div>
               <div class="text-right">
-                <div class="font-bold text-[#1f2230] text-sm">-$${Math.abs(t.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                <div class="font-bold ${formatAmountClass} text-sm">${amountDisplay}</div>
                 <div class="text-xs text-gray-400">${new Date(t.date).toLocaleDateString()}</div>
               </div>
             </div>
@@ -126,26 +134,26 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       card.innerHTML = `
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between mb-2">
           <div class="flex items-center gap-3">
             <div class="w-4 h-4 rounded-full" style="background-color: ${budget.theme}"></div>
-            <h3 class="text-xl font-bold text-[#1f2230]">${capitalize(budget.category)}</h3>
+            <h3 class="text-lg font-bold text-[#1f2230]">${capitalize(budget.category)}</h3>
           </div>
           <button class="text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5"></i></button>
         </div>
         
-        <p class="text-sm text-gray-500 mb-4">Maximum of ${formatCurrency(budget.maxSpend)}</p>
+        <p class="text-sm text-gray-500 mb-6">Maximum of ${formatCurrency(budget.maxSpend)}</p>
         
-        <div class="w-full bg-[#f3f4f6] h-6 rounded-md overflow-hidden mb-4 p-1">
-          <div class="h-full rounded-sm" style="width: ${spentPercent}%; background-color: ${budget.theme};"></div>
+        <div class="w-full bg-[#f3f4f6] h-6 rounded-md overflow-hidden mb-6">
+          <div class="h-full" style="width: ${spentPercent}%; background-color: ${budget.theme};"></div>
         </div>
         
-        <div class="flex justify-between mb-8 border-l-4 pl-3" style="border-color: ${budget.theme}">
-          <div>
+        <div class="flex mb-8">
+          <div class="flex-1 border-l-4 pl-4" style="border-color: ${budget.theme}">
             <div class="text-xs text-gray-400 mb-1">Spent</div>
             <div class="font-bold text-[#1f2230] text-sm">${formatCurrency(spent)}</div>
           </div>
-          <div class="text-right border-l pl-4 border-gray-200">
+          <div class="flex-1 border-l-4 pl-4 border-[#f3f4f6]">
             <div class="text-xs text-gray-400 mb-1">Free</div>
             <div class="font-bold text-[#1f2230] text-sm">${formatCurrency(remaining)}</div>
           </div>
@@ -176,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add legend dynamically
         pieLegend.innerHTML += `
-          <div class="flex items-center justify-between text-sm p-4 rounded-xl border border-gray-100">
-            <div class="flex items-center gap-2">
-               <div class="h-full w-1 rounded-full py-2 bg-[${budget.theme}]" style="background-color: ${budget.theme}"></div>
+          <div class="flex items-center justify-between text-sm py-3 border-b border-gray-50 last:border-0">
+            <div class="flex items-center gap-4">
+               <div class="h-4 w-1 rounded-full" style="background-color: ${budget.theme}"></div>
                <span class="text-gray-500">${capitalize(budget.category)}</span>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1">
                <span class="font-bold text-[#1f2230]">${formatCurrency(spent)}</span>
-               <span class="text-gray-400 text-xs">of ${formatCurrency(budget.maxSpend)}</span>
+               <span class="text-gray-400 text-xs ml-1">of ${formatCurrency(budget.maxSpend)}</span>
             </div>
           </div>
         `;
@@ -206,20 +214,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Re-initialize lucide icons inside dynamically generated HTML
     // @ts-ignore
-    if (window.lucide) { window.lucide.createIcons(); }
+    if (window.lucide && typeof window.lucide.createIcons === 'function') { window.lucide.createIcons(); }
   }
 
   // Event Listeners
   openBudgetModalBtn.addEventListener('click', () => {
     budgetModal.classList.remove('hidden');
+    budgetModal.classList.add('flex');
   });
 
   closeBudgetModalBtn.addEventListener('click', () => {
     budgetModal.classList.add('hidden');
+    budgetModal.classList.remove('flex');
     budgetForm.reset();
   });
 
-  budgetForm.addEventListener('submit', (e) => {
+  // Remove previously added listeners to prevent duplicate submissions
+  const newBudgetForm = budgetForm.cloneNode(true);
+  budgetForm.parentNode?.replaceChild(newBudgetForm, budgetForm);
+  const activeBudgetForm = document.getElementById('budgetForm') as HTMLFormElement;
+
+  activeBudgetForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const category = (document.getElementById('bCategory') as HTMLSelectElement).value;
@@ -241,10 +256,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     budgetModal.classList.add('hidden');
-    budgetForm.reset();
+    budgetModal.classList.remove('flex');
+    activeBudgetForm.reset();
     renderBudgets();
   });
 
   // Initial render
   renderBudgets();
+};
+
+// Fallback for direct page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initBudgets === 'function' && document.getElementById('budgetCardsContainer')) {
+        window.initBudgets();
+    }
 });
