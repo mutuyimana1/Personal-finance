@@ -8,49 +8,49 @@
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body class="bg-[#ece9e7] font-sans overflow-hidden">
-    <div class="flex h-screen">
+    <div class="flex flex-col-reverse md:flex-row h-screen">
       <aside
         id="sidebar"
-        class="w-20 bg-[#171822] text-white flex flex-col justify-between py-6 transition-all duration-300"
+        class="w-full md:w-20 bg-[#171822] text-white flex md:flex-col justify-between py-4 md:py-6 px-6 md:px-0 transition-all duration-300 rounded-t-2xl md:rounded-none z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] md:shadow-none"
       >
-        <div>
-          <div class="flex justify-center mb-10 text-4xl font-bold">f</div>
-          <nav class="space-y-6 px-5">
+        <div class="flex-1 md:flex-none">
+          <div class="hidden md:flex justify-center mb-10 text-4xl font-bold">f</div>
+          <nav class="flex md:flex-col justify-between md:justify-start md:space-y-6 md:px-5 h-full md:h-auto items-center">
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="overview"
             >
-             <a href="/index.html"><i data-lucide="home"></i></a>
+             <a href="/index.html" class="flex"><i data-lucide="home"></i></a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="transfer"
             >
-              <a href="/transactions.html"
+              <a href="/transactions.html" class="flex"
                 ><i data-lucide="arrow-up-down"></i
               ></a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-teal-400"
+              class="nav-btn w-auto md:w-full flex justify-center text-teal-400 p-2 md:p-0"
               data-page="analytics"
             >
-             <a href="/budgets.html"> <i data-lucide="pie-chart"></i> </a>
+             <a href="/budgets.html" class="flex"> <i data-lucide="pie-chart"></i> </a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="pots"
             >
-              <a href="/pots.html">  <i data-lucide="wallet"></i> </a>
+              <a href="/pots.html" class="flex">  <i data-lucide="wallet"></i> </a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="transactions"
             >
-               <a href="/recurring-bills.html">  <i data-lucide="receipt"></i> </a>
+               <a href="/recurring-bills.html" class="flex">  <i data-lucide="receipt"></i> </a>
             </button>
           </nav>
         </div>
-        <div class="px-5">
+        <div class="hidden md:block px-5">
           <button
             class="w-full flex justify-center text-gray-400 hover:text-white"
           >
@@ -59,16 +59,17 @@
         </div>
       </aside>
 
-      <main class="flex-1 overflow-y-auto p-8 relative">
-         <div class="flex items-center justify-between mb-8">
-          <h1 id="pageTitle" class="text-3xl font-bold text-[#1f2230]">
+      <main class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+         <div class="flex items-center justify-between mb-6 md:mb-8">
+          <h1 id="pageTitle" class="text-2xl md:text-3xl font-bold text-[#1f2230]">
             Budgets
           </h1>
           <button
             id="openBudgetModalBtn"
-            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold text-sm hover:bg-gray-800 transition"
+            class="bg-[#171822] text-white px-4 py-2 md:px-5 md:py-3 rounded-xl flex items-center gap-2 font-semibold text-sm md:text-base hover:bg-gray-800 transition"
           >
-            +Add New Budget
+            <span class="md:hidden">+ Add</span>
+            <span class="hidden md:inline">+ Add New Budget</span>
           </button>
         </div>
         
@@ -96,14 +97,13 @@
           <div class="w-full lg:w-2/3 flex flex-col gap-6" id="budgetCardsContainer">
              <!-- Budget Cards generated dynamically -->
           </div>
-          </div>
         </section>
         
         <!-- Modal Overlay -->
-        <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center">
+        <div id="budgetModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
           <!-- Modal Content -->
-        <div class="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl">
-          <button id="closeBudgetModalBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+          <button id="closeBudgetModalBtn" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-gray-600">
             <i data-lucide="x" class="w-5 h-5"></i>
           </button>
           
@@ -174,7 +174,10 @@
     </script>
     <script src="/router.js"></script>
     <script src="/index.js"></script>
+    <script src="/overview.js"></script>
     <script src="/transactions.js"></script>
     <script src="/budgets.js"></script>
+    <script src="/pots.js"></script>
+    <script src="/recurring-bills.js"></script>
   </body>
 </html>

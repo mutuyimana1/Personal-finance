@@ -1,23 +1,31 @@
 "use strict";
-// Mocks (simulating shared state)
-const mockTransactions = [
-    { id: '1', name: 'Transport', category: 'transportation', date: '2026-04-20', amount: -5000.00, recurring: false },
-    { id: '2', name: 'Uber Auto', category: 'transportation', date: '2026-04-18', amount: -125.00, recurring: false },
-    { id: '3', name: 'Groceries', category: 'food', date: '2026-04-15', amount: -350.00, recurring: false },
-    { id: '4', name: 'Cinema', category: 'entertainment', date: '2026-04-12', amount: -80.00, recurring: false },
-];
-let budgets = [
-    { id: 'b1', category: 'transportation', maxSpend: 5400, theme: '#656464' }
-];
+// State from local storage
+let budgetTransactions = [];
+let budgetsData = [];
+
+function loadData() {
+    const storedTransactions = localStorage.getItem('transactions');
+    if (storedTransactions) {
+        budgetTransactions = JSON.parse(storedTransactions);
+    }
+    const storedBudgets = localStorage.getItem('budgets');
+    if (storedBudgets) {
+        budgetsData = JSON.parse(storedBudgets);
+    }
+}
+
+function saveBudgets() {
+    localStorage.setItem('budgets', JSON.stringify(budgetsData));
+}
 // Utility functions
 function getSpent(category) {
-    return mockTransactions
-        .filter(t => t.category === category && t.amount < 0)
+    return budgetTransactions
+        .filter(t => t.category === category)
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
 }
 function getLatestTransactions(category) {
-    return mockTransactions
-        .filter(t => t.category === category && t.amount < 0)
+    return budgetTransactions
+        .filter(t => t.category === category)
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 3);
 }
@@ -43,6 +51,7 @@ function getIconForCategory(category) {
 // DOM Setup
 // Function to initialize budgets logic
 window.initBudgets = function () {
+    loadData();
     // Budget Summary Elements
     const pieChart = document.getElementById('pieChart');
     const pieTotalSpent = document.getElementById('pieTotalSpent');
@@ -68,14 +77,14 @@ window.initBudgets = function () {
         // Array to hold conic gradient stops
         let conicGradients = [];
         let currentDegree = 0;
-        if (budgets.length === 0) {
+        if (budgetsData.length === 0) {
             budgetCardsContainer.innerHTML = '<div class="text-center text-gray-400 py-10 w-full">No budgets found. Add one to start tracking!</div>';
             pieChart.style.background = `conic-gradient(#f3f4f6 0deg, #f3f4f6 360deg)`;
             pieTotalSpent.textContent = '$0.00';
             pieTotalLimit.textContent = 'of $0.00 limit';
             return;
         }
-        budgets.forEach(budget => {
+        budgetsData.forEach(budget => {
             totalLimit += budget.maxSpend;
             const spent = getSpent(budget.category);
             totalSpent += spent;
@@ -148,7 +157,7 @@ window.initBudgets = function () {
         });
         // Re-calculate strictly for the pie chart out of all budgets
         let globalSpentPercentAccumulator = 0;
-        budgets.forEach((budget) => {
+        budgetsData.forEach((budget) => {
             const spent = getSpent(budget.category);
             if (totalSpent > 0 && spent > 0) {
                 const percentOfSpent = (spent / totalLimit) * 100;
@@ -199,23 +208,20 @@ window.initBudgets = function () {
         budgetModal.classList.remove('flex');
         budgetForm.reset();
     });
-    // Remove previously added listeners to prevent duplicate submissions
-    const newBudgetForm = budgetForm.cloneNode(true);
-    budgetForm.parentNode?.replaceChild(newBudgetForm, budgetForm);
-    const activeBudgetForm = document.getElementById('budgetForm');
-    activeBudgetForm.addEventListener('submit', (e) => {
+    // Form Submission
+    budgetForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const category = document.getElementById('bCategory').value;
         const maxSpend = parseFloat(document.getElementById('bSpend').value);
         const theme = document.getElementById('bTheme').value;
         // Check if category budget already exists and update, or add new
-        const existingIndex = budgets.findIndex(b => b.category === category);
+        const existingIndex = budgetsData.findIndex(b => b.category === category);
         if (existingIndex > -1) {
-            budgets[existingIndex].maxSpend = maxSpend;
-            budgets[existingIndex].theme = theme;
+            budgetsData[existingIndex].maxSpend = maxSpend;
+            budgetsData[existingIndex].theme = theme;
         }
         else {
-            budgets.push({
+            budgetsData.push({
                 id: Date.now().toString(),
                 category,
                 maxSpend,
@@ -224,7 +230,8 @@ window.initBudgets = function () {
         }
         budgetModal.classList.add('hidden');
         budgetModal.classList.remove('flex');
-        activeBudgetForm.reset();
+        budgetForm.reset();
+        saveBudgets();
         renderBudgets();
     });
     // Initial render

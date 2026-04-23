@@ -8,73 +8,153 @@
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body class="bg-[#ece9e7] font-sans overflow-hidden">
-    <div class="flex h-screen">
+    <div class="flex flex-col-reverse md:flex-row h-screen">
       <aside
         id="sidebar"
-        class="w-20 bg-[#171822] text-white flex flex-col justify-between py-6 transition-all duration-300"
+        class="w-full md:w-20 bg-[#171822] text-white flex md:flex-col justify-between py-4 md:py-6 px-6 md:px-0 transition-all duration-300 rounded-t-2xl md:rounded-none z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] md:shadow-none"
       >
-        <div>
-          <div class="flex justify-center mb-10 text-4xl font-bold">f</div>
-          <nav class="space-y-6 px-5">
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="overview"
-            >
-             <a href="/index.html"><i data-lucide="home"></i></a>
+        <div class="flex-1 md:flex-none">
+          <div class="hidden md:flex justify-center mb-10 text-4xl font-bold">f</div>
+          <nav class="flex md:flex-col justify-between md:justify-start md:space-y-6 md:px-5 h-full md:h-auto items-center">
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="overview">
+             <a href="/index.html" class="flex"><i data-lucide="home"></i></a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center  text-gray-400 hover:text-white"
-              data-page="transfer"
-            >
-              <a href="/transactions.html"
-                ><i data-lucide="arrow-up-down"></i
-              ></a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="transfer">
+              <a href="/transactions.html" class="flex"><i data-lucide="arrow-up-down"></i></a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="analytics"
-            >
-             <a href="/budgets.html"> <i data-lucide="pie-chart"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="analytics">
+             <a href="/budgets.html" class="flex"> <i data-lucide="pie-chart"></i> </a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center  text-teal-400"
-              data-page="pots"
-            >
-              <a href="/pots.html">  <i data-lucide="wallet"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-teal-400 p-2 md:p-0" data-page="pots">
+              <a href="/pots.html" class="flex">  <i data-lucide="wallet"></i> </a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="transactions"
-            >
-                <a href="/recurring-bills.html">  <i data-lucide="receipt"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="transactions">
+               <a href="/recurring-bills.html" class="flex">  <i data-lucide="receipt"></i> </a>
             </button>
           </nav>
         </div>
-        <div class="px-5">
-          <button
-            class="w-full flex justify-center text-gray-400 hover:text-white"
-          >
-            <i data-lucide="log-out"></i>
-          </button>
+        <div class="hidden md:block px-5">
+          <button class="w-full flex justify-center text-gray-400 hover:text-white"><i data-lucide="log-out"></i></button>
         </div>
       </aside>
 
-      <main class="flex-1 overflow-y-auto p-8">
-         <div class="flex items-center justify-between mb-8">
-          <h1 id="pageTitle" class="text-3xl font-bold text-[#1f2230]">
+      <main class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+         <div class="flex items-center justify-between mb-6 md:mb-8">
+          <h1 id="pageTitle" class="text-2xl md:text-3xl font-bold text-[#1f2230]">
             Pots
           </h1>
           <button
-            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold"
+            id="openPotModalBtn"
+            class="bg-[#171822] text-white px-4 py-2 md:px-5 md:py-3 rounded-xl flex items-center gap-2 font-semibold text-sm md:text-base hover:bg-gray-800 transition"
           >
-            <i data-lucide="plus"></i> Add new pot
+            <span class="md:hidden">+ Add</span>
+            <span class="hidden md:inline">+ Add New Pot</span>
           </button>
         </div>
+        
         <section id="pots" class="page">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
-          Pots
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="potsCardsContainer">
+            <!-- Pot Cards generated dynamically -->
           </div>
         </section>
+
+        <!-- "Add New Pot" Modal -->
+        <div id="potModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
+          <!-- Modal Content -->
+          <div class="bg-white rounded-2xl w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+            <button id="closePotModalBtn" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-gray-600">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <h2 class="text-2xl font-bold text-[#1f2230] mb-2">Add New Pot</h2>
+            <p class="text-sm text-gray-500 mb-6">Create a pot to set savings targets. These pots can help keep you on track to save for special items.</p>
+            
+            <form id="potForm" class="space-y-5">
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Pot Name</label>
+                <input
+                  type="text"
+                  id="pName"
+                  maxlength="30"
+                  required
+                  placeholder="e.g. Rainy Days"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800"
+                />
+                <div class="text-right text-xs text-gray-400 mt-1"><span id="charCount">30 characters left</span></div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Target Amount</label>
+                <input
+                  type="number"
+                  id="pTarget"
+                  step="0.01"
+                  required
+                  placeholder="e.g. $2000"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Theme</label>
+                <div class="relative">
+                  <select id="pTheme" required class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800 appearance-none bg-white text-gray-700">
+                    <option value="" disabled selected>Select a theme</option>
+                    <option value="#c2410c" class="text-[#c2410c]">Rust</option>
+                    <option value="#22c55e" class="text-[#22c55e]">Green</option>
+                    <option value="#eab308" class="text-[#eab308]">Yellow</option>
+                    <option value="#06b6d4" class="text-[#06b6d4]">Cyan</option>
+                    <option value="#3b82f6" class="text-[#3b82f6]">Blue</option>
+                    <option value="#8b5cf6" class="text-[#8b5cf6]">Purple</option>
+                    <option value="#ec4899" class="text-[#ec4899]">Pink</option>
+                    <option value="#f97316" class="text-[#f97316]">Orange</option>
+                    <option value="#64748b" class="text-[#64748b]">Grey</option>
+                    <option value="#525252" class="text-[#525252]">Dark Grey</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="w-full bg-[#1f2230] text-white py-4 rounded-xl font-bold mt-2 hover:bg-gray-800 transition">
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- "Manage Money" Modal -->
+        <div id="manageMoneyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
+          <!-- Modal Content -->
+          <div class="bg-white rounded-2xl w-full max-w-md p-6 md:p-8 relative shadow-2xl">
+            <button id="closeManageMoneyBtn" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-gray-600">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <h2 id="manageMoneyTitle" class="text-2xl font-bold text-[#1f2230] mb-2">Manage Money</h2>
+            <p id="manageMoneyDesc" class="text-sm text-gray-500 mb-6">Manage your pot's balance.</p>
+            
+            <form id="manageMoneyForm" class="space-y-5">
+              <div>
+                <label class="block text-sm font-semibold text-gray-600 mb-2">Amount</label>
+                <input
+                  type="number"
+                  id="manageMoneyAmount"
+                  step="0.01"
+                  required
+                  placeholder="$"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-gray-800"
+                />
+              </div>
+
+              <button type="submit" class="w-full bg-[#1f2230] text-white py-4 rounded-xl font-bold mt-2 hover:bg-gray-800 transition">
+                Confirm
+              </button>
+            </form>
+          </div>
+        </div>
+
       </main>
     </div>
     <script>
@@ -82,7 +162,10 @@
     </script>
     <script src="/router.js"></script>
     <script src="/index.js"></script>
+    <script src="/overview.js"></script>
     <script src="/transactions.js"></script>
     <script src="/budgets.js"></script>
+    <script src="/pots.js"></script>
+    <script src="/recurring-bills.js"></script>
   </body>
 </html>

@@ -8,51 +8,51 @@
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body class="bg-[#ece9e7] font-sans overflow-hidden">
-    <div class="flex h-screen">
+    <div class="flex flex-col-reverse md:flex-row h-screen">
       <aside
         id="sidebar"
-        class="w-20 bg-[#171822] text-white flex flex-col justify-between py-6 transition-all duration-300"
+        class="w-full md:w-20 bg-[#171822] text-white flex md:flex-col justify-between py-4 md:py-6 px-6 md:px-0 transition-all duration-300 rounded-t-2xl md:rounded-none z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] md:shadow-none"
       >
-        <div>
-          <div class="flex justify-center mb-10 text-4xl font-bold">f</div>
-          <nav class="space-y-6 px-5">
+        <div class="flex-1 md:flex-none">
+          <div class="hidden md:flex justify-center mb-10 text-4xl font-bold">f</div>
+          <nav class="flex md:flex-col justify-between md:justify-start md:space-y-6 md:px-5 h-full md:h-auto items-center">
             <button
-              class="nav-btn w-full flex justify-center text-teal-400"
+              class="nav-btn w-auto md:w-full flex justify-center text-teal-400 p-2 md:p-0"
               data-page="overview"
             >
               <i data-lucide="home"></i>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="transfer"
             >
-              <a href="/transactions.html"
+              <a href="/transactions.html" class="flex"
                 ><i data-lucide="arrow-up-down"></i
               ></a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="analytics"
             >
-              <a href="/budgets.html"> <i data-lucide="pie-chart"></i> </a>
+              <a href="/budgets.html" class="flex"> <i data-lucide="pie-chart"></i> </a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="pots"
             >
-              <a href="/pots.html"> <i data-lucide="wallet"></i> </a>
+              <a href="/pots.html" class="flex"> <i data-lucide="wallet"></i> </a>
             </button>
             <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
+              class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0"
               data-page="transactions"
             >
-              <a href="/recurring-bills.html">
+              <a href="/recurring-bills.html" class="flex">
                 <i data-lucide="receipt"></i>
               </a>
             </button>
           </nav>
         </div>
-        <div class="px-5">
+        <div class="hidden md:block px-5">
           <button
             onclick="AuthSystem.logout()"
             class="w-full flex justify-center text-gray-400 hover:text-white cursor-pointer"
@@ -63,93 +63,119 @@
         </div>
       </aside>
 
-      <main class="flex-1 overflow-y-auto p-8">
-        <div class="flex items-center justify-between mb-8">
-          <h1 id="pageTitle" class="text-3xl font-bold text-[#1f2230]">
+      <main class="flex-1 overflow-y-auto p-4 md:p-8">
+        <div class="flex items-center justify-between mb-6 md:mb-8">
+          <h1 id="pageTitle" class="text-2xl md:text-3xl font-bold text-[#1f2230]">
             Overview
           </h1>
           <button
             id="logoutBtn"
             onclick="AuthSystem.logout()"
-            class="bg-[#171822] text-white px-5 py-3 rounded-xl flex items-center gap-2 font-semibold cursor-pointer hover:bg-[#0f0f1e]"
+            class="bg-[#171822] text-white px-4 py-2 md:px-5 md:py-3 rounded-xl flex items-center gap-2 font-semibold cursor-pointer hover:bg-[#0f0f1e] text-sm md:text-base"
           >
-            <i data-lucide="log-out"></i> Logout
+            <i data-lucide="log-out" class="w-4 h-4 md:w-5 md:h-5"></i> <span class="hidden md:inline">Logout</span>
           </button>
         </div>
 
-        <section id="overview" class="page space-y-8">
-          <div class="grid grid-cols-3 gap-6">
+        <section id="overview" class="page space-y-6 md:space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div class="bg-[#171822] text-white rounded-xl p-6">
-              <p class="text-lg mb-3">Current Balance</p>
-              <h2 class="text-3xl font-bold">$0.00</h2>
+              <p class="text-sm md:text-lg mb-2 md:mb-3">Current Balance</p>
+              <h2 id="ovCurrentBalance" class="text-2xl md:text-3xl font-bold">$0.00</h2>
             </div>
             <div class="bg-white rounded-xl p-6">
-              <p class="text-lg text-gray-500 mb-3">Income</p>
-              <h2 class="text-3xl font-bold">$0.00</h2>
+              <p class="text-sm md:text-lg text-gray-500 mb-2 md:mb-3">Income</p>
+              <h2 id="ovIncome" class="text-2xl md:text-3xl font-bold">$0.00</h2>
             </div>
             <div class="bg-white rounded-xl p-6">
-              <p class="text-lg text-gray-500 mb-3">Expenses</p>
-              <h2 class="text-3xl font-bold">$0.00</h2>
+              <p class="text-sm md:text-lg text-gray-500 mb-2 md:mb-3">Expenses</p>
+              <h2 id="ovExpenses" class="text-2xl md:text-3xl font-bold">$0.00</h2>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-6">
-            <div class="space-y-6">
-              <div class="bg-white rounded-xl p-8 min-h-[230px]">
-                <div class="flex justify-between mb-6">
-                  <h3 class="text-2xl font-bold">Pots</h3>
-                  <span class="text-gray-500 text-lg">See Details</span>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div class="space-y-4 md:space-y-6">
+              <div class="bg-white rounded-xl p-6 md:p-8 min-h-[230px]">
+                <div class="flex justify-between items-center mb-4 md:mb-6">
+                  <h3 class="text-xl md:text-2xl font-bold">Pots</h3>
+                  <a href="/pots.html" class="flex items-center text-gray-500 text-sm cursor-pointer hover:text-gray-800 transition">See Details <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></a>
                 </div>
-                <div
-                  class="bg-[#f2efec] rounded-xl p-6 w-[55%] flex items-center gap-5"
-                >
-                  <div class="text-teal-600"><i data-lucide="wallet"></i></div>
-                  <div>
-                    <p class="text-gray-500 text-xl">Pots</p>
-                    <p class="text-2xl font-bold">$0</p>
+                
+                <div class="flex flex-col md:flex-row gap-6">
+                  <!-- Total Box -->
+                  <div class="bg-[#f2efec] rounded-xl p-4 md:p-6 w-full md:w-[45%] flex items-center gap-4">
+                    <div class="text-teal-600"><i data-lucide="wallet" class="w-8 h-8 md:w-10 md:h-10"></i></div>
+                    <div>
+                      <p class="text-gray-500 text-sm">Total Saved</p>
+                      <p id="ovPotsTotal" class="text-xl md:text-2xl font-bold text-[#1f2230]">$0</p>
+                    </div>
+                  </div>
+                  
+                  <!-- Pot List -->
+                  <div id="ovPotsList" class="flex flex-wrap md:flex-col gap-4 flex-1">
+                    <!-- Dynamic -->
                   </div>
                 </div>
               </div>
-              <div class="bg-white rounded-xl p-8 min-h-[230px]">
-                <div class="flex justify-between mb-6">
-                  <h3 class="text-2xl font-bold">Transactions</h3>
-                  <span class="text-gray-500 text-lg">See Details</span>
+              
+              <div class="bg-white rounded-xl p-6 md:p-8 min-h-[230px]">
+                <div class="flex justify-between items-center mb-4 md:mb-6">
+                  <h3 class="text-xl md:text-2xl font-bold">Transactions</h3>
+                  <a href="/transactions.html" class="flex items-center text-gray-500 text-sm cursor-pointer hover:text-gray-800 transition">See Details <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></a>
                 </div>
-                <p class="text-gray-400 text-lg">No Data Provided</p>
+                
+                <div id="ovTransactionsList" class="flex flex-col gap-3">
+                  <!-- Dynamic -->
+                </div>
               </div>
             </div>
 
-            <div class="space-y-6">
-              <div class="bg-white rounded-xl p-8 min-h-[470px]">
-                <div class="flex justify-between mb-6">
-                  <h3 class="text-2xl font-bold">Budgets</h3>
-                  <span class="text-gray-500 text-lg">See Details</span>
+            <div class="space-y-4 md:space-y-6">
+              <div class="bg-white rounded-xl p-6 md:p-8 min-h-[300px] md:min-h-[470px]">
+                <div class="flex justify-between items-center mb-4 md:mb-6">
+                  <h3 class="text-xl md:text-2xl font-bold">Budgets</h3>
+                  <a href="/budgets.html" class="flex items-center text-gray-500 text-sm cursor-pointer hover:text-gray-800 transition">See Details <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></a>
                 </div>
-                <p class="text-gray-400 text-lg">No Data Provided.</p>
+                
+                <div class="flex items-center justify-center gap-8 mt-8">
+                  <!-- Mini Pie Chart -->
+                  <div id="ovBudgetsPie" class="w-40 h-40 rounded-full flex items-center justify-center relative transition-all duration-500" style="background: conic-gradient(#f3f4f6 0deg, #f3f4f6 360deg);">
+                    <div class="w-28 h-28 bg-white rounded-full flex flex-col items-center justify-center absolute z-10 shadow-inner">
+                      <span id="ovBudgetsPieSpent" class="text-xl font-bold text-[#1f2230]">$0.00</span>
+                      <span id="ovBudgetsPieLimit" class="text-[10px] text-gray-400 mt-1">of $0.00 limit</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Legend -->
+                  <div id="ovBudgetsLegend" class="flex flex-col gap-3">
+                    <!-- Dynamic -->
+                  </div>
+                </div>
               </div>
-              <div class="bg-white rounded-xl p-8">
-                <div class="flex justify-between mb-6">
-                  <h3 class="text-2xl font-bold">Recurring Bills</h3>
-                  <span class="text-gray-500 text-lg">See Details</span>
+              
+              <div class="bg-white rounded-xl p-6 md:p-8">
+                <div class="flex justify-between items-center mb-4 md:mb-6">
+                  <h3 class="text-xl md:text-2xl font-bold">Recurring Bills</h3>
+                  <a href="/recurring-bills.html" class="flex items-center text-gray-500 text-sm cursor-pointer hover:text-gray-800 transition">See Details <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></a>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3 md:space-y-4">
                   <div
-                    class="bg-[#f2efec] rounded-xl p-5 border-l-4 border-teal-500 flex justify-between text-xl"
+                    class="bg-[#f2efec] rounded-xl p-4 md:p-5 border-l-4 border-teal-500 flex justify-between text-sm md:text-base font-semibold"
                   >
                     <span class="text-gray-500">Paid Bills</span
-                    ><strong>$0.00</strong>
+                    ><strong id="ovPaidBills" class="text-[#1f2230]">$0.00</strong>
                   </div>
                   <div
-                    class="bg-[#f2efec] rounded-xl p-5 border-l-4 border-orange-300 flex justify-between text-xl"
+                    class="bg-[#f2efec] rounded-xl p-4 md:p-5 border-l-4 border-orange-300 flex justify-between text-sm md:text-base font-semibold"
                   >
                     <span class="text-gray-500">Total Upcoming</span
-                    ><strong>$0.00</strong>
+                    ><strong id="ovTotalUpcoming" class="text-[#1f2230]">$0.00</strong>
                   </div>
                   <div
-                    class="bg-[#f2efec] rounded-xl p-5 border-l-4 border-cyan-300 flex justify-between text-xl"
+                    class="bg-[#f2efec] rounded-xl p-4 md:p-5 border-l-4 border-cyan-300 flex justify-between text-sm md:text-base font-semibold"
                   >
                     <span class="text-gray-500">Due Soon</span
-                    ><strong>$0.00</strong>
+                    ><strong id="ovDueSoon" class="text-[#1f2230]">$0.00</strong>
                   </div>
                 </div>
               </div>
@@ -158,22 +184,22 @@
         </section>
 
         <section id="transfer" class="page hidden">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
+          <div class="bg-white rounded-xl p-6 md:p-10 text-xl md:text-3xl font-semibold">
             Transfer Page
           </div>
         </section>
         <section id="analytics" class="page hidden">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
+          <div class="bg-white rounded-xl p-6 md:p-10 text-xl md:text-3xl font-semibold">
             Analytics Page
           </div>
         </section>
         <section id="pots" class="page hidden">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
+          <div class="bg-white rounded-xl p-6 md:p-10 text-xl md:text-3xl font-semibold">
             Pots Page
           </div>
         </section>
         <section id="transactions" class="page hidden">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
+          <div class="bg-white rounded-xl p-6 md:p-10 text-xl md:text-3xl font-semibold">
             Transactions Page
           </div>
         </section>
@@ -184,7 +210,10 @@
     </script>
     <script src="/router.js"></script>
     <script src="/index.js"></script>
+    <script src="/overview.js"></script>
     <script src="/transactions.js"></script>
     <script src="/budgets.js"></script>
+    <script src="/pots.js"></script>
+    <script src="/recurring-bills.js"></script>
   </body>
 </html>
