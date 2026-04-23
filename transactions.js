@@ -88,11 +88,7 @@ window.initTransactions = function () {
         charCount.textContent = remaining.toString();
     });
     // Form Submission
-    // Remove previously added listeners to prevent duplicate submissions if init is called multiple times
-    const newForm = transactionForm.cloneNode(true);
-    transactionForm.parentNode?.replaceChild(newForm, transactionForm);
-    const activeTransactionForm = document.getElementById('transactionForm');
-    activeTransactionForm.addEventListener('submit', (e) => {
+    transactionForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newTransaction = {
             id: Date.now().toString(),
@@ -105,7 +101,7 @@ window.initTransactions = function () {
         transactions.unshift(newTransaction);
         modal.classList.add('hidden');
         modal.classList.remove('flex');
-        activeTransactionForm.reset();
+        transactionForm.reset();
         document.getElementById('charCount').textContent = '30';
         // reset filters
         currentSearch = '';
@@ -160,14 +156,17 @@ window.initTransactions = function () {
                 const amountDisplay = (t.amount >= 0 ? '+$' : '-$') + Math.abs(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 const formatAmountClass = t.amount >= 0 ? "text-teal-600 font-bold" : "text-[#1f2230] font-bold";
                 const rowHTML = `
-          <div class="grid grid-cols-4 items-center border-b pb-3 text-sm">
-            <div class="flex items-center gap-3">
-              ${getCategoryIcon(t.category)}
-              <span class="font-bold text-[#1f2230]">${t.name}</span>
+          <div class="flex flex-col md:grid md:grid-cols-4 items-start md:items-center border-b pb-3 text-sm gap-2 md:gap-0">
+            <div class="flex items-center justify-between w-full md:w-auto md:block">
+              <div class="flex items-center gap-3">
+                ${getCategoryIcon(t.category)}
+                <span class="font-bold text-[#1f2230]">${t.name}</span>
+              </div>
+              <div class="md:hidden text-right ${formatAmountClass}">${amountDisplay}</div>
             </div>
-            <div class="text-gray-500 capitalize">${t.category}</div>
-            <div class="text-gray-500">${new Date(t.date).toLocaleDateString()}</div>
-            <div class="text-right ${formatAmountClass}">${amountDisplay}</div>
+            <div class="text-gray-500 capitalize hidden md:block">${t.category}</div>
+            <div class="text-gray-500 text-xs md:text-sm md:block">${new Date(t.date).toLocaleDateString()} <span class="md:hidden"> • <span class="capitalize">${t.category}</span></span></div>
+            <div class="text-right ${formatAmountClass} hidden md:block">${amountDisplay}</div>
           </div>
         `;
                 tList.innerHTML += rowHTML;

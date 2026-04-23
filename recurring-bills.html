@@ -8,62 +8,136 @@
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body class="bg-[#ece9e7] font-sans overflow-hidden">
-    <div class="flex h-screen">
+    <div class="flex flex-col-reverse md:flex-row h-screen">
       <aside
         id="sidebar"
-        class="w-20 bg-[#171822] text-white flex flex-col justify-between py-6 transition-all duration-300"
+        class="w-full md:w-20 bg-[#171822] text-white flex md:flex-col justify-between py-4 md:py-6 px-6 md:px-0 transition-all duration-300 rounded-t-2xl md:rounded-none z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)] md:shadow-none"
       >
-        <div>
-          <div class="flex justify-center mb-10 text-4xl font-bold">f</div>
-          <nav class="space-y-6 px-5">
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="overview"
-            >
-             <a href="/index.html"><i data-lucide="home"></i></a>
+        <div class="flex-1 md:flex-none">
+          <div class="hidden md:flex justify-center mb-10 text-4xl font-bold">f</div>
+          <nav class="flex md:flex-col justify-between md:justify-start md:space-y-6 md:px-5 h-full md:h-auto items-center">
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="overview">
+             <a href="/index.html" class="flex"><i data-lucide="home"></i></a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="transfer"
-            >
-              <a href="/transactions.html"
-                ><i data-lucide="arrow-up-down"></i
-              ></a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="transfer">
+              <a href="/transactions.html" class="flex"><i data-lucide="arrow-up-down"></i></a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="analytics"
-            >
-             <a href="/budgets.html"> <i data-lucide="pie-chart"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="analytics">
+             <a href="/budgets.html" class="flex"> <i data-lucide="pie-chart"></i> </a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center text-gray-400 hover:text-white"
-              data-page="pots"
-            >
-              <a href="/pots.html">  <i data-lucide="wallet"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-gray-400 hover:text-white p-2 md:p-0" data-page="pots">
+              <a href="/pots.html" class="flex">  <i data-lucide="wallet"></i> </a>
             </button>
-            <button
-              class="nav-btn w-full flex justify-center  text-teal-400"
-              data-page="transactions"
-            >
-            <a href="/recurring-bills.html">  <i data-lucide="receipt"></i> </a>
+            <button class="nav-btn w-auto md:w-full flex justify-center text-teal-400 p-2 md:p-0" data-page="transactions">
+            <a href="/recurring-bills.html" class="flex">  <i data-lucide="receipt"></i> </a>
             </button>
           </nav>
         </div>
-        <div class="px-5">
-          <button
-            class="w-full flex justify-center text-gray-400 hover:text-white"
-          >
-            <i data-lucide="log-out"></i>
-          </button>
+        <div class="hidden md:block px-5">
+          <button class="w-full flex justify-center text-gray-400 hover:text-white"><i data-lucide="log-out"></i></button>
         </div>
       </aside>
 
-      <main class="flex-1 overflow-y-auto p-8">
-        <section id="recurring-bills" class="page">
-          <div class="bg-white rounded-xl p-10 text-3xl font-semibold">
-          Recurring Bills
+      <main class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+        <h1 class="text-2xl md:text-3xl font-bold text-[#1f2230] mb-6 md:mb-8">Recurring Bills</h1>
+        
+        <section id="recurring-bills" class="page flex flex-col lg:flex-row gap-6">
+          
+          <!-- Left Column: Summary -->
+          <div class="w-full lg:w-1/3 flex flex-col gap-6">
+            
+            <!-- Total Bills Card -->
+            <div class="bg-[#171822] text-white rounded-2xl p-6 shadow-sm flex flex-col gap-8">
+              <div><i data-lucide="receipt" class="w-8 h-8"></i></div>
+              <div>
+                <p class="text-sm text-gray-400 mb-1">Total bills</p>
+                <p id="rbTotalBills" class="text-3xl font-bold">$0.00</p>
+              </div>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 class="text-lg font-bold text-[#1f2230] mb-4">Summary</h2>
+              <div class="flex flex-col gap-4 text-sm font-semibold">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                  <span class="text-gray-500">Paid bills</span>
+                  <span id="rbPaidBills" class="text-[#1f2230]">$0.00</span>
+                </div>
+                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                  <span class="text-gray-500">Total Upcoming</span>
+                  <span id="rbTotalUpcoming" class="text-[#1f2230]">$0.00</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-red-500">Due Soon</span>
+                  <span id="rbDueSoon" class="text-red-500">$0.00</span>
+                </div>
+              </div>
+            </div>
+
           </div>
+
+          <!-- Right Column: Bill List -->
+          <div class="w-full lg:w-2/3 flex flex-col gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col flex-1">
+              
+              <!-- Toolbar -->
+              <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+                <!-- Search -->
+                <div class="relative w-full md:w-64">
+                  <input
+                    type="text"
+                    id="rbSearchInput"
+                    placeholder="Search bills"
+                    class="w-full border-2 border-gray-100 rounded-xl px-4 py-2 pl-10 outline-none focus:border-gray-800 text-sm"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <!-- Sort -->
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                  <span class="text-sm text-gray-500 font-semibold hidden md:inline">Sort by</span>
+                  <div class="relative w-full md:w-40">
+                    <select id="rbSortSelect" class="w-full border-2 border-gray-100 rounded-xl px-4 py-2 outline-none focus:border-gray-800 appearance-none bg-white text-sm font-semibold text-[#1f2230]">
+                      <option value="latest">Latest</option>
+                      <option value="oldest">Oldest</option>
+                      <option value="highest">Highest</option>
+                      <option value="lowest">Lowest</option>
+                      <option value="a-z">A to Z</option>
+                      <option value="z-a">Z to A</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Table Headers -->
+              <div class="hidden md:grid grid-cols-[2fr_1fr_1fr] border-b border-gray-100 pb-3 text-xs text-gray-500 font-semibold mb-2">
+                <div>Bill Title</div>
+                <div>Due Date</div>
+                <div class="text-right">Amount</div>
+              </div>
+
+              <!-- Bill List -->
+              <div id="rbBillsList" class="flex flex-col flex-1 mb-6">
+                <!-- Generated dynamically -->
+              </div>
+
+              <!-- Pagination -->
+              <div class="flex items-center justify-between mt-auto">
+                <button id="rbPrevPageBtn" class="border border-gray-200 text-[#1f2230] font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition flex items-center gap-2">
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i> Prev
+                </button>
+                <button id="rbNextPageBtn" class="border border-gray-200 text-[#1f2230] font-semibold text-sm px-4 py-2 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition flex items-center gap-2">
+                  Next <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
+          
         </section>
       </main>
     </div>
@@ -74,5 +148,6 @@
     <script src="/index.js"></script>
     <script src="/transactions.js"></script>
     <script src="/budgets.js"></script>
+    <script src="/recurring-bills.js"></script>
   </body>
 </html>
