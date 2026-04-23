@@ -96,6 +96,21 @@ class Router {
                 window.initBudgets();
             }
         }
+        else if (url.includes('pots.html') || url === '/pots.html') {
+            if (typeof window.initPots === 'function') {
+                window.initPots();
+            }
+        }
+        else if (url.includes('recurring-bills.html') || url === '/recurring-bills.html') {
+            if (typeof window.initRecurringBills === 'function') {
+                window.initRecurringBills();
+            }
+        }
+        else if (url.includes('index.html') || url === '/' || url === '/index.html') {
+            if (typeof window.initOverview === 'function') {
+                window.initOverview();
+            }
+        }
         // Add other page logic as needed
     }
 }
